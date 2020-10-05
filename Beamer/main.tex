@@ -1,21 +1,17 @@
- \documentclass[unknownkeysallowed]{beamer}
+\documentclass[unknownkeysallowed]{beamer}
 \usepackage[french,english]{babel}
+\usepackage{beamer_js}
+\usepackage{shortcuts_js}
 
-\usepackage{pythontex}
-\usepackage[francais]{babel}
-\usepackage{xcolor}
-\usepackage{movie15}
-\usepackage[utf8]{inputenc}
-\usepackage{pythontex}
-\usepackage{fontawesome}
-\usetheme{Madrid}
-\usecolortheme{beaver}
-\usepackage{utopia}%font utopia imported
-\usepackage{graphicx}
-\newtheorem{exmp}{Exemple}[section]
-\usetheme{Boadilla}
-\usecolortheme{beaver}
-\renewcommand{\contentsname}{Table des matières} 
+% % package for JS compilation:
+% \usepackage{/home/jo/Documents/OrganizationFiles/tex/sty/beamer_js}
+% \usepackage{/home/jo/Documents/OrganizationFiles/tex/sty/shortcuts_js}
+\usepackage{csquotes}
+
+\graphicspath{{./prebuiltimages/}}
+
+\addbibresource{Bibliographie.bib}
+\usepackage{enumerate}
 
 \begin{document}
 
@@ -52,7 +48,7 @@ Université de Montpellier \\
 \end{center}
 
 \centering
-\includegraphics[width=0.13\textwidth]{Logo_université_montpellier.png}
+\includegraphics[width=0.13\textwidth]{umontpellier_logo}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -95,193 +91,204 @@ Université de Montpellier \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-\begin{alertblock}{Model}
-Suppose the data consists of $n$ samples $( y_i, x_i )^n_{i=1}$ with $p$ features. 
+\begin{frame}{Model}
+Suppose the data consists of$n$ samples $(y_i, x_i)_{i=1,\dots,n}$ with $p$ features.
 \newline The model can be written in matrix notation as :
 \begin{center}
-$y=X\beta+\epsilon$
+$y=X\beta+\varepsilon$
 \end{center}
 where
- \begin{itemize}
-        \item $X$ is an $n$$\times$$p$ matrix of regressors
-        \item $\beta$  is a $p$$\times$1 vector of unknown parameters
-        \item $\epsilon$ is a vector of normal random errors with mean 0 
-    \end{itemize}
-\end{alertblock}
-\vspace{0.4cm}
+\begin{itemize}
+	\item $X=[\bfx_1,\dots,\bfx_p]= [x_1^\top,\dots,x_n^\top]^\top$ is an $n \times p$ matrix of regressors
+	\item $\beta$ is a $p \times 1$ vector of unknown parameters
+	\item $\varepsilon$ is a vector of normal random errors with mean $0$
+\end{itemize}
+XXX % fix issues when using x_i (for i=1...n) and \bfx_j (j=1...p)
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 The OLS estimator is any coefficient vector
-$\hat\beta^{LS}\in\mathbb{R}^p$ such that :
+$\hat\beta^{\rm LS}\in\mathbb{R}^p$ such that :
 \newline
-\begin{center}
-$\hat\beta^{LS} \in argmin \ \underbrace{\frac{1}{2n}\|y-X\beta\|^2 }_{f(\beta)}$ 
-\end{center}
+\begin{align}
+\hat\beta^{\rm LS} \in \argmin_{\beta \in \bbR^p}
+\underbrace{\frac{1}{2n}\|y-X\beta\|^2 }_{f(\beta)}
+\end{align}
 \vspace{0.5cm}
-and $f(\beta)=\frac{1}{2n}\sum\limits_{i=1}^n (y_{i}-\frac{1}{2n}(X\beta)_{i})^2$ =\ $\beta^T\frac{X^TX}{2n}\beta+\frac{1}{2n}\|y\|^2- \langle y,X\beta\rangle$
+and
+\begin{align*}
+	f(\beta)
+	= \frac{1}{2n}\sum_{i=1}^n (y_{i}-\frac{1}{2n}(X\beta)_{i})^2
+	= \beta^{\top}\frac{X^{\top}X}{2n}\beta+\frac{1}{2n}\|y\|^2- \langle y,X\beta\rangle
+\end{align*}
 
 \vspace{0.5cm}
-where 
-$\langle y,X\beta\rangle=y^TX\beta=\beta^TX^Ty=\langle \beta,X^Ty\rangle$
-
-
+where
+$\langle y,X\beta\rangle=y^{\top}X\beta=\beta^{\top}X^{\top}y=\langle \beta,X^{\top}y\rangle$
 \end{frame}
-\begin{block}{Notation}
-The matrix $\hat\Sigma=\frac{X^TX}{n}$ matrix is called the Gram matrix.
-\begin{center}
-    $X^TX=\begin{pmatrix}
-   x_{1}^T  \\
-   . \\
-   . \\
-   x_{p}^T  \\
-\end{pmatrix}(x_{1}. . . x_{p}) $,
-\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\end{block}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{XXX?} % XXX TODO give a name
+\mytheorem{Notation}{
+The matrix $\hat\Sigma=\frac{X^{\top}X}{n}$ matrix is called the Gram matrix.
+\begin{center}
+    $X^{\top}X=\begin{pmatrix}
+   x_{1}^{\top}  \\
+   \vdots   \\
+   x_{p}^{\top}  \\
+\end{pmatrix}(x_{1},\dots, x_{p}) $,
+\end{center}
+}
+
 The Gram matrix is equivalent to :
-\begin{center}
-$[X^TX]_{j,j'}=[\langle x_{j},x_{j'}\rangle]_{(j,j')\in[1,p]^2}$    
-\end{center}
+\begin{align*}
+[X^{\top}X]_{j,j'}=[\langle x_{j},x_{j'}\rangle]_{(j,j')\in[1,p]^2}
+\end{align*}
 
-\begin{block}{Remark}
+\rem
 Most of the times, we scale features.
 \newline
 We have : $\bar{X_{j}}=\frac{1}{n} \sum\limits_{i=1}^{n} x_{ij}$ (1)
 \newline
  To center explanatory variables, we use the equation (1) to build the centered vector $X_{c}$
 \newline
-$X_{c}$ =  $X$ - ($\bar{X_{1}}1_n,....,\bar{X_{p}}1_n$) where 1_n=(1,...,1)
+$X_{c} = X - (\bar{X_{1}}1_n,\dots,\bar{X_{p}}1_n)$ where $\1_n=(1,\dots,1)$
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Then we obtain $\bar{X_{c}}=O_n$ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{XXX?} % XXX TODO give a name
+Then we obtain $\bar{X_{c}}=0_n$
 
 To reduce explanatory variables, we use :
 \newline
 \begin{center}
-$\hat\sigma_{j}^2=\frac{1}{n} \sum\limits_{i=1}^{n} (X_{ij}-\bar{X_{j}})$   
+$\hat\sigma_{j}^2=\frac{1}{n} \sum\limits_{i=1}^{n} (X_{ij}-\bar{X_{j}})$
 \end{center}
 Let $X_r$ be the reduced vector, then :
 \newline
 \begin{center}
-$X_{r_{j}}=\frac{X_{j}-\bar{X_{j}}1_n}{\hat\sigma_{j}}$    
+$X_{r_{j}}=\frac{X_{j}-\bar{X_{j}}1_n}{\hat\sigma_{j}}$
 \end{center}
 
-\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-\begin{alertblock}{First Order Optimality Conditions}
-We can verify the first order optimality condition because $\nabla{f(\hat\beta^{LS})}=0$
-\\
-Note that $f$ is a $C^{\infty}$ function, then differentiable
+\mytheorem{First Order Optimality Conditions}{
+We can verify the first order optimality condition because
 
-\end{alertblock}
- 
-\\\begin{block}{Remark}
-$f$ is a convex function so a local minimum is a global one. 
-\end{block}
- 
-\begin{block}{Conclusion}
-$\hat\beta^{LS}$ satisfy the following equations of orthogonality :
-\begin{itemize}
-        \item $\frac{X^TX}{n}\hat\beta^{LS}-\frac{X^Ty}{n}=0$
-        \item \iff $X^T(\frac{X\hat\beta^{LS}-y}{n})=0$
-        \item \iff $X^T(y-X\hat\beta^{LS})=0$
-        \item \iff $\langle X_{j},y-X\beta\rangle=0$ for j in 1:p
-    \end{itemize}
+\begin{align*}
+	\nabla{f(\hat\beta^{\rm LS})}=0
+\end{align*}
+}
+
+\vspace{0.4cm}
+
+\rem If $f$ is a $C^{\infty}$ function, then it is differentiable
 
 
-\end{block}
+\rem $f$ is a convex function so a local minimum is a global one.
 
-\newpage
+\vspace{0.4cm}
 
+\underline{Conclusion}:
+$\hat\beta^{\rm LS}$ satisfies the following equations of orthogonality :
+\begin{align*}
+\nabla{f(\hat\beta^{\rm LS})} = 0
+& \iff\frac{X^{\top}X}{n}\hat\beta^{\rm LS}-\frac{X^{\top}y}{n}=0\\
+& \iff X^{\top}(\frac{X\hat\beta^{\rm LS}-y}{n})=0\\
+& \iff X^{\top}(y-X\hat\beta^{\rm LS})=0\\
+& \iff \langle X_{j},y-X\beta\rangle=0 \text{for}  j \in [p]\\
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{XXX?} % XXX TODO give a name
 \begin{block}{Attention}
 
-If $p$ < $n$ so rank($X$) \leq $n$ < p Then $\hat\beta^{LS}$ is not unique 
+If $p < n$ so ${\rm rank}(X) \leq n < p$.Then, $\hat{\beta}^{\rm LS}$ is not unique
 
 \end{block}
-
-    
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{XXX?} % XXX TODO give a name
 \begin{alertblock}{Interpretation}
     \begin{itemize}
-        \item  Each explanatory feature is orthogonal to the residuals $\Gamma=y-X\hat{\beta}^{LS}$ With $\hat{\beta}^{LS}$ a solution of the linear $p$$\times$$p$ system : $$ \hat{\Sigma}\beta= \frac{X^T y}{n}  $$
-       
+        \item  Each explanatory feature is orthogonal to the residuals $\Gamma=y-X\hat{\beta}^{\rm LS}$ With $\hat{\beta}^{\rm LS}$ a solution of the linear $p$$\times$$p$ system : $$ \hat{\Sigma}\beta= \frac{X^{\top} y}{n}  $$
+
     \end{itemize}
-
-
 \end{alertblock}
 
-\begin{block}{Remarks}
+
+\rem
     \begin{itemize}
         \item  If $\hat{\Sigma}$ is invertible, the solution of the linear system is unique
         \item $\hat{\Sigma}$ is invertible $\Rightarrow$ $\hat{\Sigma}$ is positive definite
-        \item If $\hat{\Sigma}$ invertible, so $rank(\hat{\Sigma})=p$
-        \item we assume that we have a full rank column e.g. : $$rank(X)=dim(Vect(X_1,...,X_p)) \leq n $$
-       
+        \item If $\hat{\Sigma}$ invertible, so ${\rm rank}(\hat{\Sigma})=p$
+        \item we assume that we have a full rank column e.g. : $${\rm rank}(X)=\dim(\vect(X_1,\dots,X_p)) \leq n $$
     \end{itemize}
 
-
-\end{block}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{XXX?} % XXX TODO give a name
 
-\begin{frame}
+\mytheorem{Result}{
+\begin{itemize}
+    \item  If ${\rm rank}(X)=p$, so $\hat{\Sigma}$ is invertible and : $$\hat{\beta}^{\rm LS}=\hat{\Sigma}^{-1}\frac{X^{\top} y}{n}=(\frac{X^{\top} y}{n})^{-1} \frac{X^{\top} y}{n}$$
+   so :  $$ \hat{\beta}^{\rm LS}=(X^{\top}X)^{-1}X^{\top}y$$
+\end{itemize}
+}
 
+\vspace{0.6cm}
 
-
-\begin{alertblock}{Remark}
-    \begin{itemize}
-        \item  If $rank(X)=p$, so $\hat{\Sigma}$ is invertible and : $$\hat{\beta}^{LS}=\hat{\Sigma}^{-1}\frac{X^T y}{n}=(\frac{X^T y}{n})^{-1} \frac{X^T y}{n}$$
-       so :  $$ \hat{\beta}^{LS}=(X^TX)^{-1}X^Ty$$
-       
-    \end{itemize}
-
-
-\end{alertblock}
-
-\begin{block}{Notice}
-    \begin{itemize}
-        \item  In practice it is exceptional to invert $\hat{\Sigma} $ because one solves many linear systems
-       
-    \end{itemize}
-
-
-\end{block}
+\rem In practice it is exceptional to invert $\hat{\Sigma} $ because one solves many linear systems
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Data analysis}
-
 \begin{block}{Goal}
-    We want to build some ordinary least squares models of prediction with two datasets:
+We want to build some ordinary least squares models of prediction with two datasets:
 
-    \begin{itemize}
-          \item Bicycle accidents
-          \item Count data of bicycles
-      \end{itemize}
+\begin{itemize}
+	\item Bicycle accidents
+	\item Count data of bicycles
+	\end{itemize}
 \end{block}
 
-      
 \vspace{0.5cm}
 
 We propose to estimate the severity of accidents by the feature "sexe". The problem is that the features are qualitative:
 \begin{itemize}
     \item Modalities of the feature to predict: "0 - Indemne", "1 - Blessé léger", "Blessé hospitalisé", and "3 - Tué"
     \item Modalities of the feature "sexe": "M" and "F"
-\end{itemize} 
-
-
+\end{itemize}
+XXX % XXX TODO: details better the dataset
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Data analysis}
 
 \begin{alertblock}{Solution}
@@ -292,30 +299,31 @@ We convert features into ordinal features.
 
 Calculate the coefficients $\beta$ on a training sample and predict on a test sample the feature of interest. 0 is the value for male and 1 is the value for female.
 
-    
 \end{block}
+
 
 \begin{minipage}[c]{.36\linewidth}
      \begin{center}
-             \includegraphics[width=5.5cm]{stat_model_gravity.pdf}
+             \includegraphics[width=5.5cm]{stat_model_gravity}
          \end{center}
    \end{minipage} \hfill
    \begin{minipage}[c]{.55\linewidth}
     \begin{center}
-            \includegraphics[width=5.5cm]{severitypredictionwithsex.pdf}
-            
-        \end{center}
-        
- \end{minipage}
-    
-\end{frame}
+            \includegraphics[width=5.5cm]{severitypredictionwithsex}
 
+        \end{center}
+
+ \end{minipage}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Data analysis}
 
-\begin{block}{Conclusion}
+\underline{Conclusion}:
 The prediction is very bad on qualitative features. We notice that the $R^2$ is closed to 0 and it's mostly the same with the others qualitative features. With this dataset, the OLS model is not efficient for qualitative features.
-
-\end{block}
 
 \begin{block}{Prediction of a quantitative feature}
 Predict the number of accidents with the date (day, month and year) that is an ordinal feature with periodic component. Results are also very bad.
@@ -324,19 +332,22 @@ Predict the number of accidents with the date (day, month and year) that is an o
 
 \begin{minipage}[c]{.36\linewidth}
      \begin{center}
-             \includegraphics[width=4cm]{stat_model_number1.pdf}
+             \includegraphics[width=4cm]{stat_model_number1}
          \end{center}
    \end{minipage} \hfill
    \begin{minipage}[c]{.55\linewidth}
     \begin{center}
-            \includegraphics[width=5.5cm]{accidentprediction.pdf}
-            
-        \end{center}
-        
- \end{minipage}
-    
-\end{frame}
+            \includegraphics[width=5.5cm]{accidentprediction}
 
+        \end{center}
+
+ \end{minipage}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Data analysis}
 
 \begin{block}{Same thing on the second dataset}
@@ -346,36 +357,20 @@ Prediction of the number of bicycles in a day with the date and the total number
 
 \begin{minipage}[c]{.36\linewidth}
      \begin{center}
-             \includegraphics[width=4cm]{stat_model_albert.pdf}
+             \includegraphics[width=4cm]{stat_model_albert}
          \end{center}
    \end{minipage} \hfill
    \begin{minipage}[c]{.55\linewidth}
     \begin{center}
-            \includegraphics[width=5.5cm]{accidentpredictionalbert1.pdf}
-            
+            \includegraphics[width=5.5cm]{accidentpredictionalbert1}
+
         \end{center}
-        
+
  \end{minipage}
-
-
-
-    
 \end{frame}
-
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -384,35 +379,45 @@ Prediction of the number of bicycles in a day with the date and the total number
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-\begin{block}{Reminder}
-Let $\Sigma\in\mathbb{R}^{p \times p}$.
-\newline
-If   $\Sigma^T=\Sigma$ then $\Sigma$ is diagonalizable.
-\end{block}
-\begin{alertblock}{Theorem}
-For all matrix $M\in\mathbb{R}^{m_1 \times m_2}$ of rank $r$, there exist two orthogonal matrix $U\in \mathbb{R}^{m_1 \times r}$ and $V\in\mathbb{R}^{m_2 \times r}$ such that :
-\begin{center}
-    $M=U diag(s_{1}...s_{r})U^T$
-\end{center}
-where $s_{1}\ge s_{2} \ge ... \ge s_{r} \ge 0$ are the singular values of M.
-\end{alertblock}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{XXX?} % XXX TODO give a name
+
+\underline{Reminder}: Let $\Sigma\in\mathbb{R}^{p \times p}$, if $\Sigma^{\top}=\Sigma$ then $\Sigma$ is diagonalizable.
+
 \vspace{0.5cm}
-Note that : $M=\sum\limits_{j=1}^r s_{j}u_{j}v_{j}^T$ with : $U=[u_{1},...,u_{r}]$
-et $V=[v_{1} ... v_{r}]$
+
+\mytheorem{Theorem}{
+For all matrix $M\in\mathbb{R}^{m_1 \times m_2}$ of  ${\rm rank} (r)$, there exist two orthogonal matrix $U\in \mathbb{R}^{m_1 \times r}$ and $V\in\mathbb{R}^{m_2 \times r}$ such that :
+\begin{center}
+    $M=U \diag(s_{1},\dots, s_{r})U^{\top}$
+\end{center}
+where $s_{1}\ge s_{2} \ge \dots \ge s_{r} \ge 0$ are the singular values of M.
+}
+
+\vspace{0.5cm}
+
+\rem $M=\sum_{j=1}^r s_{j}u_{j}v_{j}^{\top}$ with : $U=[u_{1},\dots,u_{r}]$
+et $V=[v_{1} \dots v_{r}]$
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-\begin{block}{Definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{XXX?} % XXX TODO give a name
+
+\mytheorem{Definition}{
 For $M\in\mathbb{R}^{m_1 \times m_2}$, a pseudoinverse of $M$ is defined as a matrix $M^{+}$ satisfying :
-\begin{center}
-    $M^{+}=Vdiag(\frac{1}{s_{1}} ... \frac{1}{s_{r}})U^T$
-    =$\sum\limits_{j=1}^r \frac{1}{s_{j}}v_{j}u_{j}^T$
-\end{center}
-\end{block}
+\begin{equation*}
+    M^{+}
+    = V \diag\left(\frac{1}{s_{1}} \dots \frac{1}{s_{r}}\right)U^{\top}
+    = \sum_{j=1}^r \frac{1}{s_{j}}v_{j}u_{j}^{\top}
+\end{equation*}
+}
+
 \vspace{0.5cm}
-Remark : If $M$ is invertible, its pseudoinverse is its inverse. That is, $A^{+}=A^{-1}$
+
+\rem If $M$ is invertible, its pseudoinverse is its inverse. That is, $A^{+}=A^{-1}$
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -423,19 +428,15 @@ Remark : If $M$ is invertible, its pseudoinverse is its inverse. That is, $A^{+}
 [2] Francois Portier and Anne Sabourin, \textit{Lecture notes on ordinary least squares}, 2019, \url{https://perso.telecom-paristech.fr/sabourin/mdi720/main.pdf}
 \newline
 \newline
-[3] \textit{Ordinary least squares}, 2020, 
+[3] \textit{Ordinary least squares}, 2020,
 \url{https://en.wikipedia.org/wiki/Ordinary_least_squares}.
 \newline
 \newline
-[4] \textit{Singular value decomposition}, 2020, 
+[4] \textit{Singular value decomposition}, 2020,
 \url{https://en.wikipedia.org/wiki/Singular_value_decomposition}.
 
-
-\newline
 \printbibliography
 \end{frame}
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 \end{document}
