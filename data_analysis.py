@@ -10,8 +10,6 @@ from scipy.stats import t
 
 import patsy
 
-
-
 #data links
 url1 = "https://github.com/MegDie/advanced_lm_introduction/blob/master/datasets/Donnees_comptage.ods"
 url2 = "https://github.com/MegDie/advanced_lm_introduction/blob/master/datasets/crash_bikes.csv"
@@ -25,7 +23,7 @@ download(url2, path_target2, replace=False)
 #clean data
 df_bikes = pd.read_csv(path_target2, na_values="", converters={'data': str, 'heure': str})
 df_bikes.heure.unique()
-df_bikes['heure']=df_bikes['heure'].replace('', np.nan)
+df_bikes['heure'] = df_bikes['heure'].replace('', np.nan)
 df_bikes.dropna(subset=['heure'], inplace=True)
 
 time_improved = pd.to_datetime(df_bikes['date'] +
@@ -76,8 +74,8 @@ plt.savefig('Gender_deaths.pdf', bbox_inches="tight")
 
 #We will need this later
 df_bikes['month'] = df_bikes.index.month
-df_bikes['hour']=df_bikes.index.hour
-df_bikes['year']=df_bikes.index.year
+df_bikes['hour'] = df_bikes.index.hour
+df_bikes['year'] = df_bikes.index.year
 
 #convert gravity and sex into quantitative variable
 df_bikes['grave_quanti'] = df_bikes['gravite accident']
@@ -148,13 +146,13 @@ df_bikes = df_bikes.sort_values(["date"])
 df_bikes_date = pd.DataFrame(df_bikes.groupby(
     "date").count()["identifiant accident"])
 
-df_bikes_date['date']=df_bikes_date.index
+df_bikes_date['date'] = df_bikes_date.index
 df_bikes_date.rename(columns = {'identifiant accident': 'accidents'}, inplace=True)
 
 #features
-df_bikes_date['month']=df_bikes_date.index.month
-df_bikes_date['year']=df_bikes_date.index.year
-df_bikes_date['day']=df_bikes_date.index.day
+df_bikes_date['month'] = df_bikes_date.index.month
+df_bikes_date['year'] = df_bikes_date.index.year
+df_bikes_date['day'] = df_bikes_date.index.day
 df_bikes_date['periodic_day'] = np.cos(df_bikes_date['day'])
 df_bikes_date['periodic_month'] = np.cos(df_bikes_date['month'])
 
@@ -178,21 +176,22 @@ plt.savefig('accidentprediction.pdf', bbox_inches="tight")
 df_comptage = pd.read_excel(path_target1, engine="odf")
 df_comptage.columns.unique()
 variables = ['Date de passage', 'Heure de passage', 
-             'Nombre total de vélos passés depuis la mise en circulation', 'Nombre de vélos passés depuis le début de la journée']
+             'Nombre total de vélos passés depuis la mise en circulation', 
+             'Nombre de vélos passés depuis le début de la journée']
 df_comptage = df_comptage[variables]
 df_comptage.rename(columns = {'Nombre total de vélos passés depuis la mise en circulation': 'Total', 
                                   'Nombre de vélos passés depuis le début de la journée': 'Day_total'}, inplace=True)
 
-df_comptage.Day_total[505]=0 #it was a str
+df_comptage.Day_total[505] = 0 #it was a str
 
 #create features
-df_comptage['date']=pd.to_datetime(df_comptage["Date de passage"], format='%Y-%m-%d')
+df_comptage['date'] = pd.to_datetime(df_comptage["Date de passage"], format='%Y-%m-%d')
 df_comptage_ag = df_comptage.groupby('date').aggregate({'Total' : 'max', 'Day_total': 'max'})
 
 df_comptage_ag['date'] = df_comptage_ag.index
 df_comptage_ag['month'] = df_comptage_ag.index.month
 df_comptage_ag['day'] = df_comptage_ag.index.day
-df_comptage_ag['num']=range(182)
+df_comptage_ag['num'] = range(182)
 df_comptage_ag['sinus_day'] = np.sin(df_comptage_ag['day'])
 df_comptage_ag['sinus_num'] = np.sin(df_comptage_ag['num'])
 
