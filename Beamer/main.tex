@@ -100,12 +100,12 @@ Suppose the data consists of $n$ samples $( y_i, x_i )^n_{i=1}$ with $p$ f
 \begin{center}
 $y=X\beta+\varepsilon$
 \end{center}
-where
+where :
  \begin{itemize}
-        \item $X$ is an $n$$\times$$p$ matrix of regressors
-        \item $\beta$  is a $p$$\times$1 vector of unknown parameters
-        \item $\varepsilon$ is a vector of normal random errors with mean 0
-    \end{itemize}
+        \item $X$ is an $n \times p$ matrix of regressors
+	    \item $\beta$ is a $p \times 1$ vector of unknown parameters
+	    \item $\varepsilon$ is a vector of normal random errors with mean $0$
+\end{itemize}
 \end{frame}
 \begin{frame}
 The OLS estimator is any coefficient vector
@@ -115,7 +115,7 @@ $\hat\beta^{\rm LS}\in\mathbb{R}^p$ such that :
 $\hat\beta^{\rm LS} \in \argmin_{\beta \in \bbR^p}
 \underbrace{\frac{1}{2n}\|y-X\beta\|^2 }_{f(\beta)}$
 \end{center}
-\vspace{0.5cm}
+%\vspace{0.5cm}
 
 and
 \begin{align*}
@@ -128,6 +128,7 @@ and
 where
 $\langle y,X\beta\rangle=y^{\top}X\beta=\beta^{\top}X^{\top}y=\langle \beta,X^{\top}y\rangle$.
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{The Gram matrix}
 
@@ -162,7 +163,6 @@ We have : $\bar{X_{j}}=\frac{1}{n} \sum\limits_{i=1}^{n} x_{ij}$ (1).
  To center explanatory variables, we use the equation (1) to build the centered vector $X_{c}$.
 \newline
 $X_{c} = X - (\bar{X_{1}}1_n,\dots,\bar{X_{p}}1_n)$ where $\1_n=(1,\dots,1)$.
-
 Then we obtain $\bar{X_{c}}=0_n$.
 
 To reduce explanatory variables, we use :
@@ -212,7 +212,9 @@ If $p < n$ so ${\rm rank}(X) \leq n < p$.Then, $\hat{\beta}^{\rm LS}$ is not uni
 
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 
 \begin{alertblock}{Interpretation}
@@ -241,8 +243,6 @@ If $p < n$ so ${\rm rank}(X) \leq n < p$.Then, $\hat{\beta}^{\rm LS}$ is not uni
 
 \begin{frame}
 
-
-
 \begin{alertblock}{Remark}
     \begin{itemize}
         \item  If $rank(X)=p$, so $\hat{\Sigma}$ is invertible and : $$\hat{\beta}^{\rm LS}=\hat{\Sigma}^{-1}\frac{X^{\top} y}{n}=(\frac{X^{\top} y}{n})^{-1} \frac{X^{\top} y}{n}$$
@@ -262,11 +262,13 @@ If $p < n$ so ${\rm rank}(X) \leq n < p$.Then, $\hat{\beta}^{\rm LS}$ is not uni
 
 \end{block}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Data analysis}
 
 \begin{block}{Goal}
-    We want to build some ordinary least squares models of prediction with two datasets:
+We want to build some ordinary least squares models of prediction with two datasets:
 
     \begin{itemize}
           \item Bicycle accidents
@@ -281,8 +283,6 @@ We propose to estimate the severity of accidents by the feature "sexe". The prob
     \item Modalities of the feature to predict: "0 - Indemne", "1 - Blessé léger", "Blessé hospitalisé", and "3 - Tué"
     \item Modalities of the feature "sexe": "M" and "F"
 \end{itemize}
-
-
 \end{frame}
 
 \begin{frame}{Data analysis}
@@ -294,8 +294,8 @@ We convert features into ordinal features.
 \begin{block}{Prediction principle}
 
 Calculate the coefficients $\beta$ on a training sample and predict on a test sample the feature of interest. 0 is the value for male and 1 is the value for female.
-
 \end{block}
+
 
 \begin{minipage}[c]{.36\linewidth}
      \begin{center}
@@ -311,6 +311,10 @@ Calculate the coefficients $\beta$ on a training sample and predict on a test sa
  \end{minipage}
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{frame}{Data analysis}
 
@@ -336,8 +340,10 @@ Predict the number of accidents with the date (day, month and year) that is an o
         \end{center}
  
  \end{minipage}
-
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Data analysis}
 
@@ -358,25 +364,7 @@ Prediction of the number of bicycles in a day with the date and the total number
         \end{center}
 
  \end{minipage}
-
-
-
-
 \end{frame}
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -389,7 +377,6 @@ Prediction of the number of bicycles in a day with the date and the total number
 \begin{frame}
 \begin{block}{Reminder}
 Let $\Sigma\in\mathbb{R}^{p \times p}$.
-\newline
 If $\Sigma^{\top}=\Sigma$ then $\Sigma$ is diagonalizable.
 \end{block}
 \begin{alertblock}{Theorem}
@@ -404,6 +391,7 @@ Note that : $M=\sum_{j=1}^r s_{j}u_{j}v_{j}^{\top}$ with : $U=[u_{1},\dots,u_{r}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \begin{block}{Definition}
 For $M\in\mathbb{R}^{m_1 \times m_2}$, a pseudoinverse of $M$ is defined as a matrix $M^{+}$ satisfying :
